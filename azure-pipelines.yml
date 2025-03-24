@@ -58,7 +58,7 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      az storage blob upload-batch --destination '$web' --account-name $(storageAccountName) --source $(Build.ArtifactStagingDirectory) --overwrite
+      az storage blob upload-batch --destination '$web' --account-name $(storageAccountName) --source $(Build.ArtifactStagingDirectory)/my-angular-app --destination-path '' --overwrite
 
 - task: AzureCLI@2
   displayName: 'Verify Deployment in Azure Storage'
