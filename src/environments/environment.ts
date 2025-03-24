@@ -30,7 +30,7 @@ export const environment = {
   reviewUrl: `${productApiUrl}/api/product/review`,
   registrationUrl:`${identityServerURL}/api/auth/register`,
 
-  searchApiUrl: `${searchApiUrl}/api/v1/ProductSearch/search`, //https://localhost:44337/api/v1/ProductSearch/search?query=men
+  searchApiUrl: `${searchApiUrl}/api/v1/productsearch/search`, //https://localhost:44337/api/v1/ProductSearch/search?query=men
 
 
   userApiUrl: `${userApiUrl}/api/auth/`,
