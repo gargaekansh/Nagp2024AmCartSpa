@@ -19,6 +19,11 @@ steps:
     npm run build -- --configuration=production
   displayName: 'Install dependencies and build Angular app'
 
+- script: |
+    echo "Listing contents of dist folder:"
+    ls -lR dist/
+  displayName: 'Debug: List build output files'
+
 - task: CopyFiles@2
   displayName: 'Copy build artifacts'
   inputs:
@@ -26,11 +31,25 @@ steps:
     Contents: '**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
+- script: |
+    echo "Listing contents of artifact staging directory:"
+    ls -lR $(Build.ArtifactStagingDirectory)
+  displayName: 'Debug: List copied artifacts'
+
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: drop'
   inputs:
     pathToPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: 'drop'
+
+- task: AzureCLI@2
+  displayName: 'Check Files in Azure Storage'
+  inputs:
+    azureSubscription: '$(azureSubscriptionConnectionString)'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az storage blob list --account-name $(storageAccountName) --container-name '$web' --output table
 
 - task: AzureCLI@2
   displayName: 'Upload files to Azure Storage'
@@ -40,3 +59,12 @@ steps:
     scriptLocation: 'inlineScript'
     inlineScript: |
       az storage blob upload-batch --destination '$web' --account-name $(storageAccountName) --source $(Build.ArtifactStagingDirectory) --overwrite
+
+- task: AzureCLI@2
+  displayName: 'Verify Deployment in Azure Storage'
+  inputs:
+    azureSubscription: '$(azureSubscriptionConnectionString)'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az storage blob list --account-name $(storageAccountName) --container-name '$web' --output table
