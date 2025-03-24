@@ -27,16 +27,16 @@ export class MainHeaderComponent implements OnInit {
     private router: Router,
     private identityServer4AuthService: IdentityServer4AuthService
   ) {
-     this.test();
-    // // Fetch products from the service
+    
+  // // Fetch products from the service
     // this.headerService.getProducts().subscribe((data) => {
     //   this.products = data;
     // });
   }
 
   ngOnInit(): void {
-    this.identityServer4AuthService.login('administrator@localhost','Administrator1!').subscribe(
-    )
+    // this.identityServer4AuthService.login('administrator@localhost','Administrator1!').subscribe(
+    // )
     // Subscribe to cart count updates
     // this.cartService.cartCount$.subscribe((count) => {
     //   this.cartCount = count;
@@ -54,35 +54,11 @@ export class MainHeaderComponent implements OnInit {
       }
     });
 
-    // if (this.identityServer4AuthService.isAuthenticated()) {
-    //   // Try to load the user profile
-    //   this.identityServer4AuthService.loadUserProfile().then((profile) => {
-    //     if (profile) {
-    //       this.userName = profile.name; // Set username from user profile
-    //       this.isLoggedIn = true;
-    //       console.log('User profile loaded successfully:', profile);
-    //     } else {
-    //       // If profile is not available, fall back to reading from the token
-    //       const token = localStorage.getItem('authToken')?.toString();
-    //       if (token) {
-    //         const decodedToken = this.identityServer4AuthService.decodeToken(token);
-    //         this.userName = decodedToken.name;
-    //         this.isLoggedIn = true;
-    //         console.log('User profile loaded from token:', decodedToken);
-    //       }
-    //     }
-    //   }).catch((error) => {
-    //     // If loading profile fails, fall back to reading from the token
-    //     console.log('Failed to load user profile:', error);
-    //     const token = localStorage.getItem('authToken')?.toString();
-    //     if (token) {
-    //       const decodedToken = this.identityServer4AuthService.decodeToken(token);
-    //       this.userName = decodedToken.name;
-    //       this.isLoggedIn = true;
-    //       console.log('User profile loaded from token:', decodedToken);
-    //     }
-    //   });
-    // }
+    if (this.identityServer4AuthService.isAuthenticated()) {
+      // Try to load the user profile
+      const token  = localStorage.getItem('authToken');
+      this.identityServer4AuthService.loadUserProfile(token)
+    }
 
     // if (this.identityServer4AuthService.isAuthenticated()) {
     //   const token = localStorage.getItem('authToken')?.toString();
@@ -99,18 +75,22 @@ export class MainHeaderComponent implements OnInit {
   goToCart() {
     this.router.navigate(['cart']);
   }
-  test(){
-   console.log("hello")
-  }
+ 
   goToLogin() {
-    alert(1)
     console.log('Navigating to login page');
     this.router.navigate(['user/login']);
   }
+  goToRegistration(){
+    console.log('Navigating to registration page');
+    this.router.navigate(['user/register']);
+  }
 
   logout() {
-    console.log('Logging out user');  
-    this.identityServer4AuthService.logout();
+    const token  = localStorage.getItem('authToken');
+   
+    this.identityServer4AuthService.logout(token).subscribe( res =>{
+    });
+    this.router.navigate(['/']);
   }
 
   // goToOrderList() {

@@ -35,6 +35,7 @@ export class AuthService {
       })
     );
   }
+  
 
   // Google login
   googleLogin(idToken: string): Observable<any> {

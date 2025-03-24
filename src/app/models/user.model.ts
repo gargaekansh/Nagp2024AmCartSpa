@@ -24,7 +24,8 @@ export interface AuthenticatedUser {
 }
 
 export interface RegisterUser {
-  fullName: string;
+  mobileNumber: string;
   email: string;
+  gender:string;
   password: string;
 }
