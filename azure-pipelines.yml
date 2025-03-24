@@ -60,7 +60,9 @@ steps:
     inlineScript: |
       if [ -d "$(Build.ArtifactStagingDirectory)" ]; then
         echo "Uploading files..."
-        az storage blob upload-batch --destination '$web' --account-name $(storageAccountName) --source $(Build.ArtifactStagingDirectory) --overwrite
+        # az storage blob upload-batch --destination '$web' --account-name $(storageAccountName) --source $(Build.ArtifactStagingDirectory) --overwrite
+        az storage blob upload-batch --destination '$web' --account-name $(storageAccountName) --source $(Build.ArtifactStagingDirectory)/browser --overwrite
+
       else
         echo "Error: Source directory does not exist!"
         exit 1
