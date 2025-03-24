@@ -1,0 +1,38 @@
+trigger:
+  - main  # Adjust based on your default branch
+
+pool:
+  vmImage: 'ubuntu-latest'  # Use a Linux-based build agent
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '18.x'  # Matches the Node.js version needed for Angular 19
+
+- script: |
+    npm install -g @angular/cli
+    npm install
+    npm run build -- --configuration=production
+  displayName: 'Install dependencies and build Angular app'
+
+- task: CopyFiles@2
+  displayName: 'Copy build artifacts'
+  inputs:
+    SourceFolder: 'dist/my-angular-app'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+  inputs:
+    pathToPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: 'drop'
+
+- task: AzureCLI@2
+  displayName: 'Upload files to Azure Storage'
+  inputs:
+    azureSubscription: 'your-service-connection'  # Replace with your Azure service connection name
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az storage blob upload-batch --destination '$web' --account-name nagp2024mcarstaticwebsa --source $(Build.ArtifactStagingDirectory) --overwrite
