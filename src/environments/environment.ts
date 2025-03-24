@@ -16,10 +16,11 @@ export const environment = {
   // productItemApiUrl: `${productApiUrl}/api/product/item`,
   productItemApiUrl: `${productApiUrl}/api/v1/Catalog`,
   reviewUrl: `${productApiUrl}/api/product/review`,
+  registrationUrl:`${identityServerURL}/api/auth/register`,
 
   searchApiUrl: `${searchApiUrl}/api/v1/ProductSearch/search`, //https://localhost:44337/api/v1/ProductSearch/search?query=men
 
 
-  userApiUrl: `${userApiUrl}/api/user`,
+  userApiUrl: `${userApiUrl}/api/auth/`,
   identityServerURL: `${identityServerURL}`,
 };

@@ -1,69 +1,116 @@
 <div class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-header bg-primary text-white">
-            <h4>User Registration</h4>
-          </div>
-          <div class="card-body">
-            <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
-              <div class="mb-3">
-                <label for="fullName" class="form-label">Full Name</label>
-                <input
-                  type="text"
-                  id="fullName"
-                  class="form-control"
-                  [(ngModel)]="user.fullName"
-                  name="fullName"
-                  required
-                  #fullName="ngModel"
-                />
-                <div *ngIf="fullName.invalid && fullName.touched" class="text-danger">
-                  Full Name is required.
+  <div class="row justify-content-center">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h4>User Registration</h4>
+        </div>
+        <div class="card-body">
+          <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+          
+            <div class="mb-3">
+              <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+              <input
+                type="email"
+                id="email"
+                class="form-control"
+                [(ngModel)]="user.email"
+                name="email"
+                required
+                email
+                #email="ngModel"
+              />
+              <div *ngIf="email.invalid && email.touched" class="text-danger">
+                Please enter a valid email.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
+              <input
+                type="password"
+                id="password"
+                class="form-control"
+                [(ngModel)]="user.password"
+                name="password"
+                required
+                minlength="6"
+                #password="ngModel"
+              />
+              <div *ngIf="password.invalid && password.touched" class="text-danger">
+                Password must have:
+                <ul class="m-0">
+                  <li>At least one uppercase letter (A-Z).</li>
+                  <li>At least one digit (0-9).</li>
+                  <li>At least one special character.</li>
+                  <li>Minimum 6 characters.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="mobileNumber" class="form-label">Mobile Number <span class="text-danger">*</span></label>
+              <input
+                type="text"
+                id="mobileNumber"
+                class="form-control"
+                [(ngModel)]="user.mobileNumber"
+                name="mobileNumber"
+                required
+                #mobileNumber="ngModel"
+              />
+              <div *ngIf="mobileNumber.invalid && mobileNumber.touched" class="text-danger">
+                Mobile number is required.
+              </div>
+            </div>
+
+            <!-- Gender Selection in One Row -->
+            <div class="mb-3">
+              <label class="form-label">Gender <span class="text-danger">*</span></label>
+              <div class="d-flex gap-3">
+                <div class="form-check">
+                  <input
+                    type="radio"
+                    id="male"
+                    class="form-check-input"
+                    [(ngModel)]="user.gender"
+                    name="gender"
+                    value="Male"
+                    required
+                  />
+                  <label for="male" class="form-check-label">Male</label>
+                </div>
+                <div class="form-check">
+                  <input
+                    type="radio"
+                    id="female"
+                    class="form-check-input"
+                    [(ngModel)]="user.gender"
+                    name="gender"
+                    value="Female"
+                  />
+                  <label for="female" class="form-check-label">Female</label>
+                </div>
+                <div class="form-check">
+                  <input
+                    type="radio"
+                    id="other"
+                    class="form-check-input"
+                    [(ngModel)]="user.gender"
+                    name="gender"
+                    value="Other"
+                  />
+                  <label for="other" class="form-check-label">Other</label>
                 </div>
               </div>
-  
-              <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  class="form-control"
-                  [(ngModel)]="user.email"
-                  name="email"
-                  required
-                  email
-                  #email="ngModel"
-                />
-                <div *ngIf="email.invalid && email.touched" class="text-danger">
-                  Please enter a valid email.
-                </div>
-              </div>
-  
-              <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input
-                  type="password"
-                  id="password"
-                  class="form-control"
-                  [(ngModel)]="user.password"
-                  name="password"
-                  required
-                  minlength="6"
-                  #password="ngModel"
-                />
-                <div *ngIf="password.invalid && password.touched" class="text-danger">
-                  Password is required and must be at least 6 characters long.
-                </div>
-              </div>
-  
-              <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid">
-                Register
-              </button>
-            </form>
-          </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid">
+              Register
+            </button>
+          </form>
         </div>
       </div>
     </div>
   </div>
-  
+</div>

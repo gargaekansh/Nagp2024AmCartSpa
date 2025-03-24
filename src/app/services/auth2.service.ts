@@ -2,20 +2,11 @@ import { Injectable } from '@angular/core';
 import { OAuthService ,OAuthEvent} from 'angular-oauth2-oidc';
 import { filter } from 'rxjs/operators';
 import { from, Observable, of, BehaviorSubject } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';
 import { HttpClient, HttpParams,HttpHeaders } from '@angular/common/http';
 import { authConfig, passwordGrantConfig } from '../auth/auth.config';
 import { environment } from '../../environments/environment';
 
-// const authConfig: AuthConfig = {
-//   issuer: 'https://your-auth-server.com',
-//   clientId: 'your-client-id',
-//   redirectUri: window.location.origin,
-//   responseType: 'code',
-//   scope: 'openid profile email',
-//   showDebugInformation: true, 
-//   useSilentRefresh: true,
-//   sessionChecksEnabled: true,
-// };
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +18,7 @@ export class IdentityServer4AuthService {
 
   constructor(private oauthService: OAuthService,   private http: HttpClient,) {
     
-    this.configureAuth(); // ✅ Only configure OAuth in the browser
+    this.configureAuth(); // 
     this.handleAuthEvents();
   }
    /**
@@ -35,6 +26,14 @@ export class IdentityServer4AuthService {
    */
   isAuthenticated(): boolean {
     return !!localStorage.getItem('authToken');
+  }
+  public setUserInfo(token: string) {
+    const decodedToken = this.decodeToken(token);
+   // this.userInfoSubject.next(decodedToken);
+  }
+  public decodeToken(token: string): any {
+    localStorage.setItem('authToken', token); // Save the JWT token
+    return jwtDecode(token); // Decode the JWT token
   }
 
     /**
@@ -49,7 +48,7 @@ export class IdentityServer4AuthService {
         .then(() => {
           if (this.oauthService.hasValidAccessToken()) {
             console.info('✅ User is authenticated. Fetching profile...');
-            this.loadUserProfile();
+           // this.loadUserProfile();
           } else {
             console.warn('⚠️ User is NOT authenticated.');
           }
@@ -68,33 +67,31 @@ export class IdentityServer4AuthService {
       .pipe(filter((event: OAuthEvent) => event.type === 'token_received'))
       .subscribe(() => {
         console.info('🔄 Token received. Updating user profile...');
-        this.loadUserProfile();
+       // this.loadUserProfile();
       });
 
     this.oauthService.events
       .pipe(filter((event: OAuthEvent) => event.type === 'session_terminated'))
       .subscribe(() => {
         console.warn('⚠️ Session terminated. Logging out...');
-        this.logout();
+        //this.logout();
       });
   }
    /**
    * Loads user profile from IdentityServer.
    */
-   loadUserProfile(): Promise<any> {
+   loadUserProfile(token:any) {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
   
-    return this.oauthService
-      .loadUserProfile()
-      .then((profile) => {
+    this.http.get(`${environment.identityServerURL}/connect/userinfo`, { headers })
+      .subscribe(profile => {
         this.userProfile = profile;
         this.userInfoSubject.next(profile);
         console.info('✅ User profile loaded:', profile);
-        return profile;
-      })
-      .catch((error) => {
-        console.error('❌ Failed to load user profile:', error);
-        throw error;
       });
+  
   }
 
     /**
@@ -120,8 +117,19 @@ export class IdentityServer4AuthService {
   //   this.oauthService.initLoginFlow();
   // }
 
-  logout() {
-    this.oauthService.logOut();
+  logout(token:any):Observable<any> {
+    this.userInfoSubject.next(null); // Clear user info
+    localStorage.removeItem('authToken');
+    const headers = new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json'
+    });
+    const body = {
+      id_token_hint: token,
+      post_logout_redirect_uri: 'http://localhost:4200/',
+    };
+    alert('User logout successfully')
+    return this.http.post(`${environment.identityServerURL}/connect/endsession`, body, { headers })
   }
 
  

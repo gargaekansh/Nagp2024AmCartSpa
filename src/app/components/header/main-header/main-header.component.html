@@ -1,8 +1,3 @@
-<!-- Static Test Label for Visibility -->
-<div class="p-3 bg-warning text-dark" style="font-size: 1.5rem;" data-testid="static-label">
-  This is a test label
-</div>
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <a class="navbar-brand">
@@ -58,10 +53,10 @@
             <li><a class="dropdown-item" (click)="goToWishList()">Wishlist</a></li> -->
             <!-- <li><hr class="dropdown-divider"></li> -->
             <li *ngIf="!isLoggedIn">
-              <a class="dropdown-item" (click)="goToLogin()">Login Test</a>
+              <a class="dropdown-item" (click)="goToLogin()">Login</a>
             </li>
             <li *ngIf="!isLoggedIn">
-              <a class="dropdown-item" (click)="goToLogin()">Register</a>
+              <a class="dropdown-item" (click)="goToRegistration()">Register</a>
             </li>
             <!-- If logged in, show Logout button -->
             <li *ngIf="isLoggedIn">
