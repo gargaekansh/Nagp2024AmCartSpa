@@ -58,7 +58,13 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      az storage blob upload-batch --destination '$web' --account-name $(storageAccountName) --source $(Build.ArtifactStagingDirectory)/my-angular-app --destination-path '' --overwrite
+      if [ -d "$(Build.ArtifactStagingDirectory)" ]; then
+        echo "Uploading files..."
+        az storage blob upload-batch --destination '$web' --account-name $(storageAccountName) --source $(Build.ArtifactStagingDirectory) --overwrite
+      else
+        echo "Error: Source directory does not exist!"
+        exit 1
+      fi
 
 - task: AzureCLI@2
   displayName: 'Verify Deployment in Azure Storage'
