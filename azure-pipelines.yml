@@ -1,0 +1,78 @@
+trigger:
+  - main  # Adjust based on your default branch
+
+pool:
+  vmImage: 'ubuntu-latest'  # Use a Linux-based build agent
+  
+variables:
+  azureSubscriptionConnectionString: 'ServiceConnectionNagpAmCartTest0FrontEnd'
+  storageAccountName: 'nagp2024mcarstaticwebsa'  # Replace with your storage account name
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '18.x'  # Matches the Node.js version needed for Angular 19
+
+- script: |
+    npm install -g @angular/cli
+    npm install
+    npm run build -- --configuration=production
+  displayName: 'Install dependencies and build Angular app'
+
+- script: |
+    echo "Listing contents of dist folder:"
+    ls -lR dist/
+  displayName: 'Debug: List build output files'
+
+- task: CopyFiles@2
+  displayName: 'Copy build artifacts'
+  inputs:
+    SourceFolder: 'dist/my-angular-app'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- script: |
+    echo "Listing contents of artifact staging directory:"
+    ls -lR $(Build.ArtifactStagingDirectory)
+  displayName: 'Debug: List copied artifacts'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+  inputs:
+    pathToPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: 'drop'
+
+- task: AzureCLI@2
+  displayName: 'Check Files in Azure Storage'
+  inputs:
+    azureSubscription: '$(azureSubscriptionConnectionString)'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az storage blob list --account-name $(storageAccountName) --container-name '$web' --output table
+
+- task: AzureCLI@2
+  displayName: 'Upload files to Azure Storage'
+  inputs:
+    azureSubscription: '$(azureSubscriptionConnectionString)'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      if [ -d "$(Build.ArtifactStagingDirectory)" ]; then
+        echo "Uploading files..."
+        # az storage blob upload-batch --destination '$web' --account-name $(storageAccountName) --source $(Build.ArtifactStagingDirectory) --overwrite
+        az storage blob upload-batch --destination '$web' --account-name $(storageAccountName) --source $(Build.ArtifactStagingDirectory)/browser --overwrite
+
+      else
+        echo "Error: Source directory does not exist!"
+        exit 1
+      fi
+
+- task: AzureCLI@2
+  displayName: 'Verify Deployment in Azure Storage'
+  inputs:
+    azureSubscription: '$(azureSubscriptionConnectionString)'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az storage blob list --account-name $(storageAccountName) --container-name '$web' --output table
