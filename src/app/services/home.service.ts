@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class HomeService {
-  private apiUrl = environment.homeApiUrl; // Update with your API URL     // Get all products
+  private apiUrl = environment.homeApiUrl; // Update with your API URL
 
   constructor(private http: HttpClient) {}
 

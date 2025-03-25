@@ -2,6 +2,9 @@ li
 {
 list-style: none;
 }
+.bg-light {
+  background-color: #E3F2FD  !important;
+}
 .dropdown-wide {
     min-width: 250px;
   }
