@@ -19,7 +19,7 @@ import { RegisterUserComponent } from '../register-user/register-user.component'
     ReactiveFormsModule,
     FormsModule,
     CommonModule,
-    // RegisterUserComponent,
+    RegisterUserComponent,
   ],
   templateUrl: './login.component.html',
   providers: [

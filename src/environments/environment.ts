@@ -26,7 +26,7 @@ export const environment = {
   // homeApiUrl: `${productApiUrl}/api/home`,
   homeApiUrl: `${productApiUrl}/api/v1/Catalog/all`,  // Get all products
   // productItemApiUrl: `${productApiUrl}/api/product/item`,
-  productItemApiUrl: `${productApiUrl}/api/v1/Catalog`,
+  productItemApiUrl: `${productApiUrl}/api/v1/Catalog/`,
   reviewUrl: `${productApiUrl}/api/product/review`,
   registrationUrl:`${identityServerURL}/api/auth/register`,
 

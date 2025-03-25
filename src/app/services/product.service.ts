@@ -11,6 +11,7 @@ import { environment } from '../../environments/environment';
 })
 export class ProductService {
   private apiUrl = environment.productApiUrl;
+  private productItemUrl = environment.productItemApiUrl;
   constructor(private http: HttpClient) {}
 
   getCategories(slug: string): Observable<ProductView[]> {
@@ -29,4 +30,13 @@ export class ProductService {
       })
     );
   }
+  getItem(id:string): Observable<any> {
+    return this.http.get<any>(`${this.productItemUrl}${id}`).pipe(
+      catchError((error) => {
+        console.error('Error :', error);
+        return throwError(() => error);
+      })
+    );
+  }
+  
 }

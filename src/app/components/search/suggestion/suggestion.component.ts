@@ -52,10 +52,10 @@ export class SuggestionComponent {
   }
 
   selectSuggestion(suggestion: any) {
-    this.searchQuery = suggestion.name;
+    this.searchQuery = '';
     this.suggestions = [];
-    // this.searchService.updateSearchQuery(suggestion.value);
-    this.router.navigate(['/products']);
+    
+    this.router.navigate(['/product/item', suggestion.id]);
   }
   highlightMatch(text: string): string {
     if (!this.searchQuery) return text;

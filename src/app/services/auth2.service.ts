@@ -85,7 +85,7 @@ export class IdentityServer4AuthService {
       'Authorization': `Bearer ${token}`
     });
   
-    this.http.get(`${environment.identityServerURL}/connect/userinfo`, { headers })
+    this.http.get(`${environment.identityServerURL}/userinfo`, { headers })
       .subscribe(profile => {
         this.userProfile = profile;
         this.userInfoSubject.next(profile);
