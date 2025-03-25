@@ -47,11 +47,6 @@ export class HomeComponent implements OnInit {
     return this.homePageData.filter(product => product.category === category);
   }
   goToDetail(id: string) {
-    if (!id) {
-        console.error('Product ID is null or undefined');
-        return;
-    }
-    alert('Navigating to product detail page for product ID: ' + id);  
     console.log('Navigating to product detail page for product ID:', id);
     this.router.navigate(['/product/item', id]);
 } 

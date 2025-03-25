@@ -1,11 +1,4 @@
 import { Component } from '@angular/core';
-// import {
-//   SocialAuthService,
-//   SocialUser,
-//   GoogleLoginProvider,
-//   SocialAuthServiceConfig,
-//   GoogleSigninButtonModule,
-// } from '@abacritt/angularx-social-login';
 import {
   FormBuilder,
   FormGroup,
@@ -13,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-// import { AuthService } from '../../../services/auth.service';
+ import { IdentityServer4AuthService } from '../../../services/auth2.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { jwtDecode } from 'jwt-decode';
@@ -26,7 +19,6 @@ import { RegisterUserComponent } from '../register-user/register-user.component'
     ReactiveFormsModule,
     FormsModule,
     CommonModule,
-    // GoogleSigninButtonModule,
     RegisterUserComponent,
   ],
   templateUrl: './login.component.html',
@@ -40,17 +32,16 @@ export class LoginComponent {
   // socialUser: SocialUser | null = null;
 
   constructor(
-    // private fb: FormBuilder,
-    // private authService: AuthService,
-    // public socialAuthService: SocialAuthService,
+     private fb: FormBuilder,
+     private authService: IdentityServer4AuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    // this.loginForm = this.fb.group({
-    //   email: ['', Validators.required],
-    //   password: ['', Validators.required],
-    // });
+    this.loginForm = this.fb.group({
+      email: ['', Validators.required],
+      password: ['', Validators.required],
+    });
 
     // // Subscribe to social auth state changes
     // this.socialAuthService.authState.subscribe((user: SocialUser) => {
@@ -79,16 +70,21 @@ export class LoginComponent {
   onSubmit(): void {
     const formData = this.loginForm.value;
     console.log(formData);
-    // this.authService.login(formData).subscribe(
-    //   (response) => {
-    //     console.log('Login success', response);
-    //     this.authService.setUserInfo(response.token);
-    //     this.router.navigate(['/']);
-    //   },
-    //   (error) => {
-    //     alert('Email or password is incorrect');
-    //   }
-    // );
+    this.authService.login(formData.email,formData.password).subscribe(
+      (response) => {
+        console.log('Login success', response);
+        this.authService.loadUserProfile(response.access_token);
+        this.authService.setUserInfo(response.access_token);
+        this.router.navigate(['/']);
+      },
+      (error) => {
+        alert('Email or password is incorrect');
+      }
+    );
+  }
+  goToRegistration(){
+    console.log('Navigating to registration page');
+    this.router.navigate(['user/register']);
   }
   // socialServiceLogin() {
   //   this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);

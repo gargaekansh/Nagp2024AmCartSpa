@@ -1,12 +1,7 @@
-<!-- Static Test Label for Visibility -->
-<div class="p-3 bg-warning text-dark" style="font-size: 1.5rem;" data-testid="static-label">
-  This is a test label 111111111111111
-</div>
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <a class="navbar-brand">
-      <img src="assets/images/logo.svg" alt="Company Logo" [routerLink]="''">
+      <img src="assets/images/logo.svg" alt="Company Logo" class="logo-img">
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -58,10 +53,10 @@
             <li><a class="dropdown-item" (click)="goToWishList()">Wishlist</a></li> -->
             <!-- <li><hr class="dropdown-divider"></li> -->
             <li *ngIf="!isLoggedIn">
-              <a class="dropdown-item" (click)="goToLogin()">Login Test</a>
+              <a class="dropdown-item" (click)="goToLogin()">Login</a>
             </li>
             <li *ngIf="!isLoggedIn">
-              <a class="dropdown-item" (click)="goToLogin()">Register</a>
+              <a class="dropdown-item" (click)="goToRegistration()">Register</a>
             </li>
             <!-- If logged in, show Logout button -->
             <li *ngIf="isLoggedIn">
