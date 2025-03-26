@@ -20,6 +20,7 @@ export class RegisterUserComponent implements OnInit{
     password: '',
     gender:''
   };
+  apiErrorMessage: string = '';
 
   constructor(
     private userService: UserService,
@@ -32,6 +33,7 @@ export class RegisterUserComponent implements OnInit{
   }
 
   onSubmit() {
+    this.apiErrorMessage = ''
     if (this.user.gender && this.user.email && this.user.password && this,this.user.mobileNumber) {
       this.userService.registerUser(this.user).subscribe(
         (response) => {
@@ -39,7 +41,7 @@ export class RegisterUserComponent implements OnInit{
           this.router.navigate(['/user/login']);
         },
         (error) => {
-          alert('Error during registration');
+          this.apiErrorMessage = error?.error?.errors[0] || 'An unexpected error occurred. Please try again.';
         }
       );
     }

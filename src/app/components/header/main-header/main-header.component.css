@@ -16,6 +16,7 @@ list-style: none;
 .navbar-brand img {
   width: 150px; /* Adjust as needed */
   height: auto; /* Maintain aspect ratio */
+  cursor: pointer;
 }
 .navbar-brand img {
   margin-right: 20px; /* Add space to the right of the logo */
@@ -25,6 +26,7 @@ list-style: none;
 .navbar-brand {
   display: flex;
   align-items: center; /* Center vertically */
+  cursor: pointer;
 }
 
 .navbar-brand img {

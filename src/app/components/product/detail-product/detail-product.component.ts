@@ -11,7 +11,7 @@ import { VariantType } from '../../../models/enums';
 // import { ProductItemService } from '../../../services/productItem.service';
 //import { CartService } from '../../../services/cart.service';
 import { CartItem } from '../../../models/cart.model';
-import { TruncatePipe } from '../../../truncate.pipe';
+// import { TruncatePipe } from '../../../truncate.pipe';
 // import { ListReviewComponent } from '../../review/list-review/list-review.component';
 // import { AddReviewComponent } from '../../review/add-review/add-review.component';
 // import { AuthService } from '../../../services/auth.service';
@@ -34,10 +34,10 @@ import {
   imports: [
     FormsModule,
     CommonModule,
-    TruncatePipe,
+    //TruncatePipe,
     // ListReviewComponent,
     // AddReviewComponent,
-    LoaderComponent,
+    // LoaderComponent,
   ],
   templateUrl: './detail-product.component.html',
   styleUrl: './detail-product.component.css'

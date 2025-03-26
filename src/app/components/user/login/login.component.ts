@@ -19,7 +19,7 @@ import { RegisterUserComponent } from '../register-user/register-user.component'
     ReactiveFormsModule,
     FormsModule,
     CommonModule,
-    RegisterUserComponent,
+    // RegisterUserComponent,
   ],
   templateUrl: './login.component.html',
   providers: [
@@ -30,6 +30,7 @@ import { RegisterUserComponent } from '../register-user/register-user.component'
 export class LoginComponent {
   loginForm!: FormGroup;
   // socialUser: SocialUser | null = null;
+  apiErrorMessage: string = '';
 
   constructor(
      private fb: FormBuilder,
@@ -70,6 +71,7 @@ export class LoginComponent {
   // // Form-based sign-in
   onSubmit(): void {
     const formData = this.loginForm.value;
+     this.apiErrorMessage = ''
     console.log(formData);
     this.authService.login(formData.email,formData.password,formData.rememberMe).subscribe(
       (response) => {
@@ -81,7 +83,7 @@ export class LoginComponent {
         this.router.navigate(['/']);
       },
       (error) => {
-        alert('Email or password is incorrect');
+        this.apiErrorMessage = 'Email or password is incorrect'
       }
     );
   }

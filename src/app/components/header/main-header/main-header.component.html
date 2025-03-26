@@ -5,8 +5,8 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
-    <a class="navbar-brand">
-      <img src="assets/images/logo.svg" alt="Company Logo" class="logo-img">
+    <a class="navbar-brand" (click)="goToHome()">
+       M-Cart
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -33,10 +33,10 @@
         </li> -->
         
         <!-- Cart Button -->
-        <li class="nav-item me-3">
+        <!-- <li class="nav-item me-3">
           <a (click)="goToCart()" class="btn btn-outline-dark position-relative">
             <i class="bi bi-cart"></i>
-            <!-- Update the cart count badge -->
+          
             <span
               class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
               id="cartCount"
@@ -45,7 +45,7 @@
               {{ cartCount }}
             </span>
           </a>
-        </li>
+        </li> -->
         <!-- <app-popup-cart></app-popup-cart> -->
         <!-- Profile Dropdown -->
         <li class="nav-item dropdown">
