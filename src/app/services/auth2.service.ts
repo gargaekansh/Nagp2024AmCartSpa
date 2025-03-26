@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { OAuthService ,OAuthEvent} from 'angular-oauth2-oidc';
-import { filter } from 'rxjs/operators';
-import { from, Observable, of, BehaviorSubject } from 'rxjs';
+// import { filter } from 'rxjs/operators';
+import { switchMap ,filter } from 'rxjs/operators';
+import { from, Observable, of, BehaviorSubject ,throwError } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { HttpClient, HttpParams,HttpHeaders } from '@angular/common/http';
 import { authConfig, passwordGrantConfig } from '../auth/auth.config';
 import { environment } from '../../environments/environment';
 
+import { catchError, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +35,7 @@ export class IdentityServer4AuthService {
   }
   public decodeToken(token: string): any {
     localStorage.setItem('authToken', token); // Save the JWT token
+    
     return jwtDecode(token); // Decode the JWT token
   }
 
@@ -118,20 +121,100 @@ export class IdentityServer4AuthService {
   //   this.oauthService.initLoginFlow();
   // }
 
-  logout(token:any):Observable<any> {
-    this.userInfoSubject.next(null); // Clear user info
+  // logout(token:any):Observable<any> {
+  //   this.userInfoSubject.next(null); // Clear user info
+  //   localStorage.removeItem('authToken');
+  //   const headers = new HttpHeaders({
+  //       'Content-Type': 'application/x-www-form-urlencoded',
+  //       'Accept': 'application/json'
+  //   });
+  //   const body = {
+  //     id_token_hint: token,
+  //     post_logout_redirect_uri: 'http://localhost:4200/',
+  //   };
+  //   alert('User logout successfully')
+  //   return this.http.post(`${environment.identityServerURL}/connect/endsession`, body, { headers })
+  // }
+
+  // logout(accessToken: string): Observable<any> {
+  //   // Clear user session data
+  //   this.userInfoSubject.next(null);
+  //   localStorage.removeItem('authToken');
+  //   localStorage.removeItem('refreshToken');
+  
+  //   const headers = new HttpHeaders({
+  //     'Content-Type': 'application/x-www-form-urlencoded',
+  //     'Accept': 'application/json'
+  //   });
+  
+  //   const body = new HttpParams()
+  //     .set('token', accessToken)
+  //     .set('token_type_hint', 'access_token')
+  //     .set('client_id', passwordGrantConfig.clientId); // No client secret needed
+  
+  //   return this.http.post(`${environment.identityServerURL}/connect/revocation`, body.toString(), { headers })
+  //     .pipe(
+  //       tap(() => {
+  //         alert('User logged out successfully');
+  //         //this.router.navigate(['/login']); // Redirect to login
+  //       }),
+  //       catchError(err => {
+  //         console.error('Logout failed', err);
+  //         return throwError(() => err);
+  //       })
+  //     );
+  // }
+
+  logout(accessToken: string): Observable<any> {
+    // Get refresh token from localStorage
+    const refreshToken = localStorage.getItem('refreshToken');
+  
+    // Clear user session data immediately
+    this.userInfoSubject.next(null);
     localStorage.removeItem('authToken');
+    localStorage.removeItem('refreshToken');
+  
     const headers = new HttpHeaders({
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Accept': 'application/json'
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Accept': 'application/json',
     });
-    const body = {
-      id_token_hint: token,
-      post_logout_redirect_uri: 'http://localhost:4200/',
-    };
-    alert('User logout successfully')
-    return this.http.post(`${environment.identityServerURL}/connect/endsession`, body, { headers })
+  
+    // Create HTTP Params for Access Token Revocation
+    const accessTokenBody = new HttpParams()
+      .set('token', accessToken)
+      .set('token_type_hint', 'access_token')
+      .set('client_id', passwordGrantConfig.clientId);
+  
+    // Create HTTP Params for Refresh Token Revocation
+    const refreshTokenBody = new HttpParams()
+      .set('token', refreshToken || '')
+      .set('token_type_hint', 'refresh_token')
+      .set('client_id', passwordGrantConfig.clientId);
+  
+    // Revoke Access Token first, then Refresh Token
+    return this.http
+      .post(`${environment.identityServerURL}/connect/revocation`, accessTokenBody.toString(), { headers })
+      .pipe(
+        switchMap(() => {
+          if (refreshToken) {
+            return this.http.post(`${environment.identityServerURL}/connect/revocation`, refreshTokenBody.toString(), { headers });
+          } else {
+            console.warn('No refresh token found for revocation.');
+            return of(null); // Return empty observable if no refresh token
+          }
+        }),
+        tap(() => {
+          alert('User logged out successfully');
+          //this.router.navigate(['/login']); // Redirect to login
+        }),
+        catchError(err => {
+          console.error('Logout failed', err);
+          return throwError(() => err);
+        })
+      );
   }
+  
+  
 
  
 }

@@ -85,12 +85,30 @@ export class MainHeaderComponent implements OnInit {
     this.router.navigate(['user/register']);
   }
 
-  logout() {
-    const token  = localStorage.getItem('authToken');
+  // logout() {
+  //   const token  = localStorage.getItem('authToken');
    
-    this.identityServer4AuthService.logout(token).subscribe( res =>{
-    });
-    this.router.navigate(['/']);
+  //   this.identityServer4AuthService.logout(token).subscribe( res =>{
+  //   });
+  //   this.router.navigate(['/']);
+  // }
+
+  logout() {
+    const token = localStorage.getItem('authToken');
+  
+    if (token) {
+      this.identityServer4AuthService.logout(token).subscribe(res => {
+        console.log('Logout successful', res);
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('refreshToken');
+        this.router.navigate(['/']);
+      }, err => {
+        console.error('Logout failed', err);
+      });
+    } else {
+      console.warn('No auth token found. Redirecting to home.');
+      this.router.navigate(['/']);
+    }
   }
 
   // goToOrderList() {

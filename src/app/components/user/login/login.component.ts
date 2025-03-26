@@ -74,6 +74,8 @@ export class LoginComponent {
     this.authService.login(formData.email,formData.password,formData.rememberMe).subscribe(
       (response) => {
         console.log('Login success', response);
+        localStorage.setItem('authToken', response.access_token);
+        localStorage.setItem('refreshToken', response.refresh_token);
         this.authService.loadUserProfile(response.access_token);
         this.authService.setUserInfo(response.access_token);
         this.router.navigate(['/']);
