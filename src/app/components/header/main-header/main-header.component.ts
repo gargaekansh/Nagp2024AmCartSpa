@@ -97,9 +97,9 @@ export class MainHeaderComponent implements OnInit {
     this.router.navigate(['/']);  
   }
   logout() {
-    const token = localStorage.getItem('authToken');
-
-    localStorage.removeItem('authToken');
+    // const token = localStorage.getItem('authToken');
+    this.identityServer4AuthService.logout();
+    // localStorage.removeItem('authToken');
     localStorage.removeItem('refreshToken');
     this.router.navigate(['/user/login']);
     // if (token) {
