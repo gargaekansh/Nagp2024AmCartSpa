@@ -6,6 +6,19 @@
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <input type="text" formControlName="email" placeholder="email" class="form-control mb-2" required />
         <input type="password" formControlName="password" placeholder="Password" class="form-control mb-2" required />
+                 <!-- Remember Me Checkbox -->
+                   <!-- Remember Me Checkbox -->
+          <div class="form-check mb-3 d-flex align-items-center">
+            <input 
+              type="checkbox" 
+              formControlName="rememberMe" 
+              id="rememberMe" 
+              class="form-check-input me-2" 
+            />
+            <label for="rememberMe" class="form-check-label mb-0">
+              Remember Me
+            </label>
+          </div>
         <button type="submit" class="btn btn-primary w-100 mb-2" [disabled]="!this.loginForm.valid" >Login</button>
       </form>
       <p class="text-center">OR</p>

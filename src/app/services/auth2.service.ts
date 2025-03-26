@@ -97,7 +97,7 @@ export class IdentityServer4AuthService {
     /**
    * Initiates login process using password grant flow.
    */
-    login(username: string, password: string): Observable<any> {5  
+    login(username: string, password: string,rememberMe:boolean): Observable<any> {5  
       console.info('🔐 Starting login process...');
       const headers = new HttpHeaders({
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -109,6 +109,7 @@ export class IdentityServer4AuthService {
         .set('client_id', passwordGrantConfig.clientId)
         .set('username', username)
         .set('password', password)
+        .set('remember_me', rememberMe ? 'true' : 'false')
         .set('scope', passwordGrantConfig.scope);
   
       return this.http.post(`${environment.identityServerURL}/connect/token`, params,{headers});

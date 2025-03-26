@@ -41,6 +41,7 @@ export class LoginComponent {
     this.loginForm = this.fb.group({
       email: ['', Validators.required],
       password: ['', Validators.required],
+      rememberMe: [false] // ✅ Add this line
     });
 
     // // Subscribe to social auth state changes
@@ -70,7 +71,7 @@ export class LoginComponent {
   onSubmit(): void {
     const formData = this.loginForm.value;
     console.log(formData);
-    this.authService.login(formData.email,formData.password).subscribe(
+    this.authService.login(formData.email,formData.password,formData.rememberMe).subscribe(
       (response) => {
         console.log('Login success', response);
         this.authService.loadUserProfile(response.access_token);
