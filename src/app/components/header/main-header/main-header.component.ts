@@ -96,28 +96,49 @@ export class MainHeaderComponent implements OnInit {
   goToHome(){
     this.router.navigate(['/']);  
   }
+
+  //Working logout Code 
+  // logout() {
+  //   // const token = localStorage.getItem('authToken');
+  //   this.identityServer4AuthService.logout();
+  //   // localStorage.removeItem('authToken');
+  //   localStorage.removeItem('refreshToken');
+  //   this.router.navigate(['/user/login']);
+  //   // if (token) {
+  //   //   localStorage.removeItem('authToken');
+  //   //   localStorage.removeItem('refreshToken');
+  //   //   this.router.navigate(['/']);
+  //   //   this.identityServer4AuthService.logout(token).subscribe(res => {
+  //   //     console.log('Logout successful', res);
+  //   //     localStorage.removeItem('authToken');
+  //   //     localStorage.removeItem('refreshToken');
+  //   //     this.router.navigate(['/']);
+  //   //   }, err => {
+  //   //     console.error('Logout failed', err);
+  //   //   });
+  //   // } else {
+  //   //   console.warn('No auth token found. Redirecting to home.');
+  //   //   this.router.navigate(['/']);
+  //   // }
+  // }
+
+//Token Revocation
   logout() {
-    // const token = localStorage.getItem('authToken');
-    this.identityServer4AuthService.logout();
-    // localStorage.removeItem('authToken');
-    localStorage.removeItem('refreshToken');
-    this.router.navigate(['/user/login']);
-    // if (token) {
-    //   localStorage.removeItem('authToken');
-    //   localStorage.removeItem('refreshToken');
-    //   this.router.navigate(['/']);
-    //   this.identityServer4AuthService.logout(token).subscribe(res => {
-    //     console.log('Logout successful', res);
-    //     localStorage.removeItem('authToken');
-    //     localStorage.removeItem('refreshToken');
-    //     this.router.navigate(['/']);
-    //   }, err => {
-    //     console.error('Logout failed', err);
-    //   });
-    // } else {
-    //   console.warn('No auth token found. Redirecting to home.');
-    //   this.router.navigate(['/']);
-    // }
+    const token = localStorage.getItem('authToken');
+  
+    if (token) {
+      this.identityServer4AuthService.logout(token).subscribe(res => {
+        console.log('Logout successful', res);
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('refreshToken');
+        this.router.navigate(['/user/login']);
+      }, err => {
+        console.error('Logout failed', err);
+      });
+    } else {
+      console.warn('No auth token found. Redirecting to home.');
+      this.router.navigate(['/']);
+    }
   }
 
   // goToOrderList() {
